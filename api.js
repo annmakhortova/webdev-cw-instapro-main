@@ -1,8 +1,14 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
+
+
+import { goToPage, renderApp } from "./index.js";
+
 // "боевая" версия инстапро лежит в ключе prod
 const personalKey = "prod";
 const baseHost = "https://webdev-hw-api.vercel.app";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
+
+export let allPosts = [];
 
 export function getPosts({ token }) {
   return fetch(postsHost, {
@@ -12,16 +18,39 @@ export function getPosts({ token }) {
     },
   })
     .then((response) => {
-      if (response.status === 401) {
-        throw new Error("Нет авторизации");
+      if (response.status === 200) {
+        return response.json()
+      } if (response.status === 500) {
+        return Promise.reject(new Error("Сервер упал"))
+      } else {
+        return Promise.reject(new Error("неизвестная ошибка"))
       }
-
-      return response.json();
     })
-    .then((data) => {
-      return data.posts;
-    });
+
+     .then((responseData) => {
+      allPosts = responseData.posts.map((post) => {
+        return {
+          postId: post.id,
+          postUrl: post.imageUrl,
+          postDate: post.createdAt,
+          description: post.description,
+          userId: post.user.id,
+          userName: post.user.name,
+          userUrl: post.user.imageUrl,
+          likes: post.likes,
+          isLiked: post.isLiked
+        }
+      })
+      renderApp()
+
+    }).catch((error) => {
+      debugger
+      console.log(error)
+      goToPage(LOADING_PAGE)
+    })
+    ;
 }
+
 
 // https://github.com/GlebkaF/webdev-hw-api/blob/main/pages/api/user/README.md#%D0%B0%D0%B2%D1%82%D0%BE%D1%80%D0%B8%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D1%8C%D1%81%D1%8F
 export function registerUser({ login, password, name, imageUrl }) {
