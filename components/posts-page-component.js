@@ -44,8 +44,8 @@ export function renderPostsPageComponent({ appEl }, {token}) {
             <img class="post-image" src="${post.postUrl}">
           </div>
           <div class="post-likes" data-post-conten-id="${post.postId}">
-            <button data-post-id="${post.postId}" class="like-button like-${post.isLiked}">
-              <img src="./assets/images/${(post.isLiked == true) ? 'like-active.svg' : 'like-not-active.svg'}">
+          <button data-post-id="${post.postId}" class="like-button like-${post.isLiked}">
+            <img src="./assets/images/${(post.isLiked == true) ? 'like-active.svg' : 'like-not-active.svg'}">
             </button>
             <p class="post-likes-text">
               Нравится: <strong>${(!first) ? likeLen : (likeLen === 1) ? likesText : likesText + " и еще " + likesCount}</strong>
@@ -79,7 +79,8 @@ export function renderPostsPageComponent({ appEl }, {token}) {
     });
   }
 
- likeBtnListner()
+ 
+  likeBtnListner()
 }
 
 function likeBtnListner() {

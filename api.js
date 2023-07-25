@@ -1,5 +1,6 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 
+
 import { reRenderLikes } from "./components/posts-page-component.js";
 import { goToPage, renderApp } from "./index.js";
 
@@ -27,8 +28,7 @@ export function getPosts({ token }) {
         return Promise.reject(new Error("неизвестная ошибка"))
       }
     })
-
-     .then((responseData) => {
+    .then((responseData) => {
       allPosts = responseData.posts.map((post) => {
         return {
           postId: post.id,
@@ -43,8 +43,9 @@ export function getPosts({ token }) {
         }
       })
       renderApp()
-
+      
     }).catch((error) => {
+
       console.log(error)
       goToPage(LOADING_PAGE)
     })
@@ -71,8 +72,9 @@ export function postNew({token}, description, imageUrl) {
     if (response.status === 400) {
       throw new Error("произошла ошибка");
     }
-    getPosts({token})
     return response.json()
+  }).then((responseData) => {
+    getPosts({token})
   })
 }
 
@@ -123,97 +125,97 @@ export function uploadImage({ file }) {
 }
 
 export function userImages({token}, userId) {
-  return fetch(postsHost + '/user-posts/' + userId, {
-  method: "GET",
-  headers: {
-    Authorization: token,
-  },
-})
-  .then((response) => {
-    if (response.status === 200) {
-      return response.json()
-    } if (response.status === 500) {
-      return Promise.reject(new Error("Сервер упал"))
-    } else {
-      return Promise.reject(new Error("неизвестная ошибка"))
-    }
+    return fetch(postsHost + '/user-posts/' + userId, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
   })
-  .then((responseData) => {
-    allPosts = responseData.posts.map((post) => {
-      return {
-        postId: post.id,
-        postUrl: post.imageUrl,
-        postDate: post.createdAt,
-        description: post.description,
-        userId: post.user.id,
-        userName: post.user.name,
-        userUrl: post.user.imageUrl,
-        likes: post.likes,
-        isLiked: post.isLiked
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json()
+      } if (response.status === 500) {
+        return Promise.reject(new Error("Сервер упал"))
+      } else {
+        return Promise.reject(new Error("неизвестная ошибка"))
       }
     })
-    renderApp()
-
-  }).catch((error) => {
-    console.log(error)
-    goToPage(LOADING_PAGE)
-  })
-  ;
+    .then((responseData) => {
+      allPosts = responseData.posts.map((post) => {
+        return {
+          postId: post.id,
+          postUrl: post.imageUrl,
+          postDate: post.createdAt,
+          description: post.description,
+          userId: post.user.id,
+          userName: post.user.name,
+          userUrl: post.user.imageUrl,
+          likes: post.likes,
+          isLiked: post.isLiked
+        }
+      })
+      renderApp()
+      
+    }).catch((error) => {
+      console.log(error)
+      goToPage(LOADING_PAGE)
+    })
+    ;
 }
 
 export function likePost(id, {token}) {
-return fetch(postsHost + '/' + id + '/like', {
-  method: "POST",
-  headers: {
-    Authorization: token,
-  },
-})
-  .then((response) => {
-    if (response.status === 200) {
-      return response.json()
-    } if (response.status === 500) {
-      return Promise.reject(new Error("Сервер упал"))
-    } if (response.status === 401) {
-      alert("Только авторизованные пользователи могут ставить лайки");
-      return Promise.reject(new Error("авторизация не пройдена"))
-    }
-     else {
-      return Promise.reject(new Error("неизвестная ошибка"))
-    }
+  return fetch(postsHost + '/' + id + '/like', {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
   })
-  .then((responseData) => {
-    post = new Map(Object.entries(responseData.post))      
-    reRenderLikes(post)
-
-  }).catch((error) => {
-    console.log(error)
-  })
-  ;
-
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json()
+      } if (response.status === 500) {
+        return Promise.reject(new Error("Сервер упал"))
+      } if (response.status === 401) {
+        alert("Только авторизованные пользователи могут ставить лайки");
+        return Promise.reject(new Error("авторизация не пройдена"))
+      }
+       else {
+        return Promise.reject(new Error("неизвестная ошибка"))
+      }
+    })
+    .then((responseData) => {
+      post = new Map(Object.entries(responseData.post))      
+      reRenderLikes(post)
+      
+    }).catch((error) => {
+      console.log(error)
+    })
+    ;
+  
 }
 
 export function delikePost(id, {token}) {
-return fetch(postsHost + '/' + id + '/dislike', {
-  method: "POST",
-  headers: {
-    Authorization: token,
-  },
-})
-  .then((response) => {
-    if (response.status === 200) {
-      return response.json()
-    } if (response.status === 500) {
-      return Promise.reject(new Error("Сервер упал"))
-    } else {
-      return Promise.reject(new Error("неизвестная ошибка"))
-    }
+  return fetch(postsHost + '/' + id + '/dislike', {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
   })
-  .then((responseData) => {
-    post = new Map(Object.entries(responseData.post))
-    reRenderLikes(post)
-
-  }).catch((error) => {
-    console.log(error)
-  })
-  ;
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json()
+      } if (response.status === 500) {
+        return Promise.reject(new Error("Сервер упал"))
+      } else {
+        return Promise.reject(new Error("неизвестная ошибка"))
+      }
+    })
+    .then((responseData) => {
+      post = new Map(Object.entries(responseData.post))
+      reRenderLikes(post)
+      
+    }).catch((error) => {
+      console.log(error)
+    })
+    ;
 }

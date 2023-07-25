@@ -1,5 +1,5 @@
-import { getPosts, allPosts, postNew, userImages } from "./api.js";
-import { renderAddPostPageComponent} from "./components/add-post-page-component.js";
+import { getPosts, allPosts, postNew, userImages} from "./api.js";
+import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
   ADD_POSTS_PAGE,
@@ -57,7 +57,7 @@ export const goToPage = (newPage, data) => {
       return getPosts({ token: getToken() })
         .then((newPosts) => {
           page = POSTS_PAGE;
-          posts =  allPosts;
+          posts = allPosts;
           renderApp();
         })
         .catch((error) => {
@@ -130,8 +130,7 @@ export const renderApp = () => {
     return renderPostsPageComponent({
       appEl, 
     } ,{ token: getToken() });
-    }
-  
+  }
 
   if (page === USER_POSTS_PAGE) {
     // TODO: реализовать страницу фотографию пользвателя
