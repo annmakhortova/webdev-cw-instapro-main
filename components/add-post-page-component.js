@@ -1,7 +1,11 @@
+import { renderHeaderComponent } from "./header-component.js";
+
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
   const render = () => {
     // TODO: Реализовать страницу добавления поста
     const appHtml = `
+    <div class="page-container">
+    <div class="header-container"></div>
     <div class="form">
     <h3 class="form-title">Добавить пост</h3>
     <div class="form-inputs">
@@ -22,9 +26,13 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
         <button class="button" id="add-button">Добавить</button>
     </div>
   </div>
+  </div>
   `;
 
     appEl.innerHTML = appHtml;
+    renderHeaderComponent({
+      element: document.querySelector(".header-container"),
+    });
     let description  = document.querySelector('.textarea')
     const fileInputElement = document.querySelector('.file-upload-input');
     const data = ''
@@ -46,10 +54,8 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
 
     function inputElem(fileInputElement, postImage) {
       fileInputElement.addEventListener('input', (e) => {
-        alert(1)
-        postImage({ file: fileInputElement.files[0] })
-        console.log ({file: fileInputElement.files[0]})
-      })
+       postImage({ file: fileInputElement.files[0] })
+       })
     }
 
     inputElem(fileInputElement, postImage)
@@ -85,7 +91,6 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
     }
     function addNewPost(imageUrl) {
       document.getElementById("add-button").addEventListener("click", () => {
-        console.log(imageUrl)
         onAddPostClick({
 
           description: description.value,
