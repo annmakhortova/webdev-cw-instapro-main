@@ -3,8 +3,7 @@
 MVP аналога популярной соц. сети для обмена фотографиями
 
 ## Ссылка на приложение:
-
-https::
+https://annmakhortova.github.io/webdev-cw-instapro-main/
 
 ## Первоначальная оценка
 
