@@ -1,4 +1,4 @@
-import { getPosts, allPosts, postNew, userImages } from "./api.js";
+import { getPosts, allPosts, postNew } from "./api.js";
 import { renderAddPostPageComponent} from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -20,7 +20,7 @@ export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
 
-export const getToken = () => {
+const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
   return token;
 };
@@ -68,19 +68,10 @@ export const goToPage = (newPage, data) => {
 
     if (newPage === USER_POSTS_PAGE) {
       // TODO: реализовать получение постов юзера из API
-      page = LOADING_PAGE;
-      renderApp()
-
-      return userImages({token: getToken()}, data.userId)
-      .then((newPosts) => {
-        page = USER_POSTS_PAGE
-        posts = allPosts
-        renderApp()
-      })
-      .catch((error) => {
-        console.log(error)
-        goToPage(LOADING_PAGE)
-      })
+      console.log("Открываю страницу пользователя: ", data.userId);
+      page = USER_POSTS_PAGE;
+      posts = [];
+      return renderApp();
     }
 
     page = newPage;
@@ -121,6 +112,7 @@ export const renderApp = () => {
       onAddPostClick({ description, imageUrl }) {
         // TODO: реализовать добавление поста в API
         postNew( { token: getToken() }, description, imageUrl)
+        console.log("Добавляю пост...", { description, imageUrl});
         goToPage(POSTS_PAGE);
       },
     });
@@ -128,16 +120,14 @@ export const renderApp = () => {
 
   if (page === POSTS_PAGE) {
     return renderPostsPageComponent({
-      appEl, 
-    } ,{ token: getToken() });
-    }
-  
+      appEl,
+    });
+  }
 
   if (page === USER_POSTS_PAGE) {
     // TODO: реализовать страницу фотографию пользвателя
-    return renderPostsPageComponent({
-      appEl,
-    }, { token: getToken() });
+    appEl.innerHTML = "Здесь будет страница фотографий пользователя";
+    return;
   }
 };
 
